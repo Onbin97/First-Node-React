@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const mongoose = require('mongoose');
+const { json } = require('express/lib/response');
 mongoose
     .connect(config.mongoURI)
     .then(() => console.log('MongoDB Connected..'))
@@ -22,6 +23,21 @@ app.post('/register', (req, res) => {
         if (err) return res.json({ success: false, err });
         return res.status(200).json({
             success: true,
+        });
+    });
+});
+
+app.post('/login', (req, res) => {
+    User.findOne({ email: req.body.email }, (err, userInfo) => {
+        if (!userInfo) {
+            return res.json({
+                loginSuccess: false,
+                msg: 'DOES_NOT_EXIST_USER_EMAIL',
+            });
+        }
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if (!isMatch)
+                return res.json({ loginSuccess: false, msg: 'PASSWORD_ERROR' });
         });
     });
 });
