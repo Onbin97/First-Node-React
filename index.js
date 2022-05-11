@@ -38,6 +38,8 @@ app.post('/login', (req, res) => {
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (!isMatch)
                 return res.json({ loginSuccess: false, msg: 'PASSWORD_ERROR' });
+
+            user.generateToken((err, user) => {});
         });
     });
 });
